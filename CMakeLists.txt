@@ -85,8 +85,25 @@ add_this_package(${pomerol_sources})
 # Dependencies
 add_eigen3()
 add_mpi()
+
+set(Boost_USE_MULTITHREADED ON)
 add_boost(mpi serialization)
+
 add_testing()
+
+if(TARGET Boost::mpi)
+  get_target_property(Boost_MPI_LIBRARY Boost::mpi IMPORTED_LOCATION)
+  message(STATUS "Boost_MPI_LIBRARY = ${Boost_MPI_LIBRARY}")
+endif()
+if(TARGET Boost::serialization)
+  get_target_property(Boost_SERIALIZATION_LIBRARY Boost::serialization IMPORTED_LOCATION)
+  message(STATUS "Boost_SERIALIZATION_LIBRARY = ${Boost_SERIALIZATION_LIBRARY}")
+endif()
+set(Boost_LIBRARIES "")
+list(APPEND Boost_LIBRARIES ${Boost_MPI_LIBRARY})
+list(APPEND Boost_LIBRARIES ${Boost_SERIALIZATION_LIBRARY})
+
+message(STATUS "Boost_LIBRARIES = ${Boost_LIBRARIES}")
 
 # Build executables
 option(Progs "Build executables" OFF)
